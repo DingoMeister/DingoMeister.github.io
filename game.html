@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Click the Box Game!</title>
+
+    <!-- det här är css -->
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      #gameArea {
+        width: 400px;
+        height: 400px;
+        border: 2px solid #000;
+        margin: 20px auto;
+        position: relative;
+      }
+      #box {
+        width: 50px;
+        height: 50px;
+        background-color: red;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      #score,
+      #timeLeft {
+        font-size: 20px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Click the Box Game!</h1>
+
+    <div id="gameArea">
+      <div id="box"></div>
+    </div>
+
+    <div id="score">Score: 0</div>
+    <div id="timeLeft">Time Left: 10 seconds</div>
+
+    <!--  det här är javascript -->
+    <script>
+      // Variables for game mechanics
+      let score = 0;
+      let timeLeft = 10;
+      let gameInterval, boxInterval;
+
+      // Get HTML elements
+      const box = document.getElementById("box");
+      const scoreDisplay = document.getElementById("score");
+      const timeLeftDisplay = document.getElementById("timeLeft");
+      const gameArea = document.getElementById("gameArea");
+
+      // Function to move the box to a random position
+      function moveBox() {
+        const areaWidth = gameArea.clientWidth;
+        const areaHeight = gameArea.clientHeight;
+
+        // Random position within the game area
+        const randomX = Math.floor(
+          Math.random() * (areaWidth - box.clientWidth)
+        );
+        const randomY = Math.floor(
+          Math.random() * (areaHeight - box.clientHeight)
+        );
+
+        box.style.left = randomX + "px";
+        box.style.top = randomY + "px";
+      }
+
+      // Function to start the game
+      function startGame() {
+        // Reset score and time
+        score = 0;
+        timeLeft = 10;
+        scoreDisplay.textContent = "Score: " + score;
+        timeLeftDisplay.textContent = "Time Left: " + timeLeft + " seconds";
+
+        // Move the box every 800ms
+        boxInterval = setInterval(moveBox, 800);
+
+        // Countdown timer every second
+        gameInterval = setInterval(() => {
+          timeLeft--;
+          timeLeftDisplay.textContent = "Time Left: " + timeLeft + " seconds";
+          if (timeLeft <= 0) {
+            endGame();
+          }
+        }, 1000);
+      }
+
+      // Function to end the game
+      function endGame() {
+        clearInterval(boxInterval);
+        clearInterval(gameInterval);
+        alert("Game over! Your final score is: " + score);
+      }
+
+      // Handle box click event
+      box.addEventListener("click", () => {
+        if (timeLeft > 0) {
+          score++;
+          scoreDisplay.textContent = "Score: " + score;
+          moveBox(); // Move the box to a new position immediately
+        }
+      });
+
+      // Start the game when the page loads
+      window.onload = startGame;
+    </script>
+  </body>
+</html>
